@@ -1,0 +1,30 @@
+{
+  "name": "react-fetches",
+  "version": "0.1.0-alpha.0",
+  "description": "A new way to perform fetch requests with react.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest --config .jestrc.json",
+    "eslint": "eslint src tests"
+  },
+  "author": "Daniel Leite de Oliveira <dleitee@gmail.com> (https://github.com/dleitee)",
+  "license": "ISC",
+  "dependencies": {
+    "fetches": "^0.1.0-alpha.1",
+    "lodash.frompairs": "^4.0.1",
+    "p-is-promise": "^1.1.0",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "^22.4.4",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^4.19.1",
+    "eslint-config-cheesecakelabs": "^2.0.3",
+    "form-data": "^2.3.2",
+    "jest": "^22.4.4",
+    "node-fetch": "^2.1.2"
+  }
+}

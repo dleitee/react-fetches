@@ -1,0 +1,11 @@
+{
+  "verbose": true,
+  "collectCoverage": true,
+  "setupFiles": ["./tests/config.test.js"],
+  "collectCoverageFrom": ["./src/**/*.js"],
+  "testPathIgnorePatterns": ["./tests/config.test.js"],
+  "transform": {
+    "^.+\\.js?$": "babel-jest"
+  },
+  "moduleFileExtensions": ["js"]
+}

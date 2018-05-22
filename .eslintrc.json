@@ -1,0 +1,6 @@
+{
+  "extends": ["cheesecakelabs"],
+  "settings": {
+    "import/resolver": 0
+  }
+}
