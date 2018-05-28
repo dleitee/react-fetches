@@ -49,24 +49,21 @@ describe('connect with mapRequestsToProps', () => {
     await wait(() => getByText('Loading'))
     await wait(() => getByText('Loaded'))
   })
-  test('should return a map with { body: "success" }', async () => {
+  test('should return a map with { name, errors, responses}', async () => {
+    const renderized = jest.fn()
     const SimpleComponent = props => {
-      if (!props.loading) {
-        expect(props.name).toEqual({ body: 'success' })
-      }
-
+      renderized(props)
       return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     }
 
     SimpleComponent.propTypes = {
       loading: PropTypes.bool.isRequired,
-      name: PropTypes.shape({
-        body: PropTypes.string,
-      }),
     }
 
     SimpleComponent.defaultProps = {
       name: {},
+      errors: {},
+      responses: {},
     }
 
     const mapRequestsToProps = http => ({
@@ -81,6 +78,16 @@ describe('connect with mapRequestsToProps', () => {
     )
     await wait(() => getByText('Loading'))
     await wait(() => getByText('Loaded'))
+
+    expect(renderized).toHaveBeenCalledTimes(2)
+    expect(renderized).toBeCalledWith(
+      expect.objectContaining({
+        loading: expect.any(Boolean),
+        name: expect.any(Object),
+        errors: expect.any(Object),
+        responses: expect.any(Object),
+      })
+    )
   })
   test('should return the parsed string', async () => {
     const SimpleComponent = props => {
@@ -137,5 +144,44 @@ describe('connect with mapRequestsToProps', () => {
     await wait(() => getByText('Loading'))
     await wait(() => getByText('Loaded'))
     expect(renderized).toHaveBeenCalledTimes(2)
+  })
+  test('should be able to return two or more props', async () => {
+    nock(EXAMPLE_URI)
+      .get('/first-name/')
+      .delay(500)
+      .reply(200, () => ({ body: 'success' }))
+    nock(EXAMPLE_URI)
+      .get('/last-name/')
+      .delay(500)
+      .reply(200, () => ({ body: 'success' }))
+    const renderized = jest.fn()
+    const SimpleComponent = props => {
+      renderized(props)
+      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+    }
+
+    SimpleComponent.propTypes = {
+      loading: PropTypes.bool.isRequired,
+    }
+
+    const mapRequestsToProps = (http, parser) => ({
+      name: parser(http.get('name'), item => item.body),
+      last_name: parser(http.get('last-name'), item => item.body),
+      first_name: parser(http.get('first-name'), item => item.body),
+    })
+
+    const ConnectedComponent = connect(mapRequestsToProps)(SimpleComponent)
+    const { getByText } = render(
+      <View>
+        <ConnectedComponent />
+      </View>
+    )
+    await wait(() => getByText('Loading'))
+    await wait(() => getByText('Loaded'))
+    expect(renderized).toHaveBeenCalledTimes(2)
+    const props = renderized.mock.calls[1][0]
+    expect(props.name).toBe('success')
+    expect(props.last_name).toBe('success')
+    expect(props.first_name).toBe('success')
   })
 })
