@@ -21,7 +21,7 @@ describe('connect with mapRequestsToProps', () => {
   beforeEach(() => {
     nock(EXAMPLE_URI)
       .get('/name/')
-      .delay(1000)
+      .delay(500)
       .reply(200, () => ({ body: 'success' }))
   })
   afterAll(() => {
@@ -112,5 +112,30 @@ describe('connect with mapRequestsToProps', () => {
     )
     await wait(() => getByText('Loading'))
     await wait(() => getByText('Loaded'))
+  })
+  test('should call the render function only twice', async () => {
+    const renderized = jest.fn()
+    const SimpleComponent = props => {
+      renderized()
+      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+    }
+
+    SimpleComponent.propTypes = {
+      loading: PropTypes.bool.isRequired,
+    }
+
+    const mapRequestsToProps = (http, parser) => ({
+      name: parser(http.get('name'), item => item.body),
+    })
+
+    const ConnectedComponent = connect(mapRequestsToProps)(SimpleComponent)
+    const { getByText } = render(
+      <View>
+        <ConnectedComponent />
+      </View>
+    )
+    await wait(() => getByText('Loading'))
+    await wait(() => getByText('Loaded'))
+    expect(renderized).toHaveBeenCalledTimes(2)
   })
 })
