@@ -14,7 +14,7 @@ const handler = (request, parser = defaultParser) => index =>
   new Promise(resolve => {
     request
       .catch(error => {
-        resolve([
+        return resolve([
           index,
           {
             error,
@@ -24,13 +24,19 @@ const handler = (request, parser = defaultParser) => index =>
         ])
       })
       .then(response => {
+        if (!response) {
+          return
+        }
         const clone = response.clone()
         if (contentTypeIsJSON(response.headers.get('content-type'))) {
           return response.json().then(data => Promise.resolve({ data, response: clone }))
         }
         return response.text().then(data => Promise.resolve({ data, response: clone }))
       })
-      .then(({ data, response }) =>
+      .then(({ data, response } = {}) => {
+        if (!data) {
+          return
+        }
         resolve([
           index,
           {
@@ -39,7 +45,7 @@ const handler = (request, parser = defaultParser) => index =>
             data: parser(data),
           },
         ])
-      )
+      })
   })
 
 const getPromiseFromKey = (values, key) =>
@@ -57,6 +63,9 @@ const makeRequests = (client, cb) => mapRequestsToProps => {
 }
 
 export const connect = mapRequestsToProps => WrappedComponent => {
+  if (!mapRequestsToProps) {
+    return WrappedComponent
+  }
   class Wrapper extends React.Component {
     constructor(props) {
       super(props)
