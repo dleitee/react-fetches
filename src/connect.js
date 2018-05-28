@@ -24,9 +24,6 @@ const handler = (request, parser = defaultParser) => index =>
         ])
       })
       .then(response => {
-        if (!response) {
-          return
-        }
         const clone = response.clone()
         if (contentTypeIsJSON(response.headers.get('content-type'))) {
           return response.json().then(data => Promise.resolve({ data, response: clone }))
@@ -62,6 +59,28 @@ const makeRequests = (client, cb) => mapRequestsToProps => {
   asyncFunction(requests, cb)
 }
 
+const makeResponses = data => {
+  const keys = Object.keys(data)
+  return keys.reduce((previous, current) => {
+    const body = {
+      ...previous.body,
+      [current]: data[current].data,
+    }
+    const errors = {
+      ...previous.errors,
+      [current]: data[current].error,
+    }
+    const responses = {
+      ...previous.responses,
+      [current]: data[current].response.clone(),
+    }
+    return {
+      body,
+      errors,
+      responses,
+    }
+  }, {})
+}
 export const connect = mapRequestsToProps => WrappedComponent => {
   if (!mapRequestsToProps) {
     return WrappedComponent
@@ -76,9 +95,13 @@ export const connect = mapRequestsToProps => WrappedComponent => {
     componentDidMount() {
       if (this.props.client) {
         makeRequests(this.props.client, data => {
+          const responses = makeResponses(data)
+
           this.setState({
             loading: false,
-            ...data,
+            ...responses.body,
+            errors: responses.errors,
+            responses: responses.responses,
           })
         })(mapRequestsToProps)
       }

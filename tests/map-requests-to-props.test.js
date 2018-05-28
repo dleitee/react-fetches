@@ -18,16 +18,16 @@ View.propTypes = {
 }
 
 describe('connect with mapRequestsToProps', () => {
-  beforeAll(() => {})
-  afterAll(() => {
-    nock.cleanAll()
-  })
-  test('must add a prop called loading with the request status', async () => {
+  beforeEach(() => {
     nock(EXAMPLE_URI)
       .get('/name/')
       .delay(1000)
       .reply(200, () => ({ body: 'success' }))
-
+  })
+  afterAll(() => {
+    nock.cleanAll()
+  })
+  test('must add a prop called loading with the request status', async () => {
     const SimpleComponent = props => (
       <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     )
@@ -39,6 +39,40 @@ describe('connect with mapRequestsToProps', () => {
     const mapRequestsToProps = http => ({
       name: http.get('name'),
     })
+
+    const ConnectedComponent = connect(mapRequestsToProps)(SimpleComponent)
+    const { getByText } = render(
+      <View>
+        <ConnectedComponent />
+      </View>
+    )
+    await wait(() => getByText('Loading'))
+    await wait(() => getByText('Loaded'))
+  })
+  test('should return a map with { body: "success" }', async () => {
+    const SimpleComponent = props => {
+      if (!props.loading) {
+        expect(props.name).toEqual({ body: 'success' })
+      }
+
+      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+    }
+
+    SimpleComponent.propTypes = {
+      loading: PropTypes.bool.isRequired,
+      name: PropTypes.shape({
+        body: PropTypes.string,
+      }),
+    }
+
+    SimpleComponent.defaultProps = {
+      name: {},
+    }
+
+    const mapRequestsToProps = http => ({
+      name: http.get('name'),
+    })
+
     const ConnectedComponent = connect(mapRequestsToProps)(SimpleComponent)
     const { getByText } = render(
       <View>
