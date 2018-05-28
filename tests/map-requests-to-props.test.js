@@ -82,4 +82,35 @@ describe('connect with mapRequestsToProps', () => {
     await wait(() => getByText('Loading'))
     await wait(() => getByText('Loaded'))
   })
+  test('should return the parsed string', async () => {
+    const SimpleComponent = props => {
+      if (!props.loading) {
+        expect(props.name).toBe('success')
+      }
+
+      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+    }
+
+    SimpleComponent.propTypes = {
+      loading: PropTypes.bool.isRequired,
+      name: PropTypes.string,
+    }
+
+    SimpleComponent.defaultProps = {
+      name: undefined,
+    }
+
+    const mapRequestsToProps = (http, parser) => ({
+      name: parser(http.get('name'), item => item.body),
+    })
+
+    const ConnectedComponent = connect(mapRequestsToProps)(SimpleComponent)
+    const { getByText } = render(
+      <View>
+        <ConnectedComponent />
+      </View>
+    )
+    await wait(() => getByText('Loading'))
+    await wait(() => getByText('Loaded'))
+  })
 })
