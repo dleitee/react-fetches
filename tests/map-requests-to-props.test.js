@@ -184,4 +184,32 @@ describe('connect with mapRequestsToProps', () => {
     expect(props.last_name).toBe('success')
     expect(props.first_name).toBe('success')
   })
+  test('should maintain the component props', async () => {
+    const renderized = jest.fn()
+    const SimpleComponent = props => {
+      renderized(props)
+      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+    }
+
+    SimpleComponent.propTypes = {
+      loading: PropTypes.bool.isRequired,
+    }
+
+    const mapRequestsToProps = (http, parser) => ({
+      name: parser(http.get('name'), item => item.body),
+    })
+
+    const ConnectedComponent = connect(mapRequestsToProps)(SimpleComponent)
+    const { getByText } = render(
+      <View>
+        <ConnectedComponent prop1="prop1" />
+      </View>
+    )
+    await wait(() => getByText('Loading'))
+    await wait(() => getByText('Loaded'))
+    expect(renderized).toHaveBeenCalledTimes(2)
+    const props = renderized.mock.calls[1][0]
+    expect(props.prop1).toBe('prop1')
+    expect(props.name).toBe('success')
+  })
 })

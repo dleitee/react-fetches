@@ -108,16 +108,14 @@ export const connect = mapRequestsToProps => WrappedComponent => {
     }
 
     render() {
-      return React.createElement(WrappedComponent, this.state)
+      return React.createElement(WrappedComponent, Object.assign({}, this.props, this.state))
     }
   }
 
-  class FecthesComponent extends React.Component {
-    render() {
-      return (
-        <FetchesContext.Consumer>{client => <Wrapper client={client} />}</FetchesContext.Consumer>
-      )
-    }
-  }
+  const FecthesComponent = props => (
+    <FetchesContext.Consumer>
+      {client => <Wrapper client={client} {...props} />}
+    </FetchesContext.Consumer>
+  )
   return FecthesComponent
 }
