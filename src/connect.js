@@ -1,6 +1,6 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
-import { getHTTPMethods } from 'fetches'
+import { Client, getHTTPMethods } from 'fetches'
 import isPromise from 'p-is-promise'
 import _fromPairs from 'lodash.frompairs'
 
@@ -13,16 +13,6 @@ const defaultParser = data => data
 const handler = (request, parser = defaultParser) => index =>
   new Promise(resolve => {
     request
-      .catch(error => {
-        return resolve([
-          index,
-          {
-            error,
-            response: null,
-            data: null,
-          },
-        ])
-      })
       .then(response => {
         const clone = response.clone()
         if (contentTypeIsJSON(response.headers.get('content-type'))) {
@@ -31,18 +21,26 @@ const handler = (request, parser = defaultParser) => index =>
         return response.text().then(data => Promise.resolve({ data, response: clone }))
       })
       .then(({ data, response } = {}) => {
-        if (!data) {
-          return
-        }
+        const hasError = 399 % response.status === 399
         resolve([
           index,
           {
-            error: 400 % request.status === 400,
+            error: hasError ? data : false,
             response,
-            data: parser(data),
+            data: !hasError ? parser(data) : null,
           },
         ])
       })
+      .catch(error =>
+        resolve([
+          index,
+          {
+            error,
+            response: null,
+            data: null,
+          },
+        ])
+      )
   })
 
 const getPromiseFromKey = (values, key) =>
@@ -72,7 +70,7 @@ const makeResponses = data => {
     }
     const responses = {
       ...previous.responses,
-      [current]: data[current].response.clone(),
+      [current]: data[current].response && data[current].response.clone(),
     }
     return {
       body,
@@ -110,6 +108,10 @@ export const connect = mapRequestsToProps => WrappedComponent => {
     render() {
       return React.createElement(WrappedComponent, Object.assign({}, this.props, this.state))
     }
+  }
+
+  Wrapper.propTypes = {
+    client: PropTypes.instanceOf(Client).isRequired,
   }
 
   const FecthesComponent = props => (

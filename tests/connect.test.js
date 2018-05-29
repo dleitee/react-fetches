@@ -1,11 +1,19 @@
-import { connect } from '../src'
+import React, { Fragment } from 'react'
+import PropTypes from 'prop-types'
 
-const SimpleComponent = props => <div>{props.name}</div>
-
-SimpleComponent.defaultProps = {
-  name: 'test',
-}
+import { connect } from '../src/connect'
 
 describe('Connect function', () => {
-  test('should return only ConnectedComponent', () => {})
+  test('should return only ConnectedComponent', () => {
+    const SimpleComponent = props => (
+      <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+    )
+
+    SimpleComponent.propTypes = {
+      loading: PropTypes.bool.isRequired,
+    }
+
+    const ConnectedComponent = connect()(SimpleComponent)
+    expect(ConnectedComponent).toBe(SimpleComponent)
+  })
 })
