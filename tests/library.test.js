@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/extensions, import/no-unresolved
 import { Provider, connect } from '../'
 
 describe('Library exports', () => {
