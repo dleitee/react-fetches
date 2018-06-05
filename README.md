@@ -1,5 +1,7 @@
 # react-fetches
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/dleitee/react-fetches.svg?token=02c8adf78705fea22a73f5fb6ebb60e58cb82cd203254efc1dc5f141eb9bd461&ts=1528216010503)](https://greenkeeper.io/)
+
 React Fetches is a simple and efficient way to make requests into your REST API's.
 
 ## Table of Contents
