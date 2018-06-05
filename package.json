@@ -20,7 +20,7 @@
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
-    "babel-jest": "^22.4.4",
+    "babel-jest": "^23.0.1",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
@@ -28,7 +28,7 @@
     "eslint": "^4.19.1",
     "eslint-config-cheesecakelabs": "^2.0.3",
     "form-data": "^2.3.2",
-    "jest": "^22.4.4",
+    "jest": "^23.1.0",
     "lodash.get": "^4.4.2",
     "nock": "^9.2.6",
     "node-fetch": "^2.1.2",
