@@ -1,15 +1,15 @@
 {
+  "presets": [
+    ["env", {"modules": false}]
+  ],
+  "plugins": ["transform-object-rest-spread"],
   "env": {
-    "development": {
+    "test": {
       "presets": ["env", "react"]
     },
-      "rollup": {
-        "presets": [
-          ["env", {
-            "modules": false,
-          }], "react"
-        ],
-        "plugins": ["external-helpers"]
-      }
+    "rollup": {
+      "presets": [["env", {"modules": false}], "react"],
+      "plugins": ["transform-object-rest-spread", "external-helpers"]
+    },
   }
 }

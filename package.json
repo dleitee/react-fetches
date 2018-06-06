@@ -1,14 +1,23 @@
 {
   "name": "react-fetches",
-  "version": "0.1.0-alpha.0",
+  "version": "1.0.0",
   "description": "A new way to perform fetch requests with react.",
-  "main": "src/index.js",
+  "main": "./lib/module.js",
   "scripts": {
-    "test": "BABEL_ENV=development jest --config .jestrc.json",
+    "test": "BABEL_ENV=test jest --config .jestrc.json",
+    "build": "NODE_ENV=rollup rollup -c",
     "eslint": "eslint src tests"
   },
-  "author": "Daniel Leite de Oliveira <dleitee@gmail.com> (https://github.com/dleitee)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dleitee/fetches.git"
+  },
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dleitee/fetches/issues"
+  },
+  "homepage": "https://github.com/dleitee/fetches#readme",
+  "author": "Daniel Leite de Oliveira <dleitee@gmail.com> (https://github.com/dleitee)",
   "dependencies": {
     "fetches": "^0.1.3",
     "lodash.frompairs": "^4.0.1",
@@ -22,16 +31,25 @@
     "babel-eslint": "^8.2.3",
     "babel-jest": "^23.0.1",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "dom-testing-library": "^2.3.2",
     "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
     "eslint-config-cheesecakelabs": "^2.0.3",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.9.1",
     "form-data": "^2.3.2",
     "jest": "^23.1.0",
     "lodash.get": "^4.4.2",
     "nock": "^9.2.6",
     "node-fetch": "^2.1.2",
-    "react-testing-library": "^3.1.3"
+    "react-testing-library": "^3.1.3",
+    "rollup": "^0.59.4",
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-node-resolve": "^3.3.0"
   }
 }
