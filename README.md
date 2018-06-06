@@ -1,5 +1,6 @@
 # react-fetches
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/dleitee/react-fetches.svg?token=02c8adf78705fea22a73f5fb6ebb60e58cb82cd203254efc1dc5f141eb9bd461&ts=1528216010503)](https://greenkeeper.io/)
 [![codecov](https://codecov.io/gh/dleitee/react-fetches/branch/master/graph/badge.svg?token=HGzOPgq5AL)](https://codecov.io/gh/dleitee/react-fetches)
 [![CircleCI](https://circleci.com/gh/dleitee/react-fetches/tree/master.svg?style=svg&circle-token=317c7e90c40a084e9de799bfa3fd963a85c1acb7)](https://circleci.com/gh/dleitee/react-fetches/tree/master)
 
