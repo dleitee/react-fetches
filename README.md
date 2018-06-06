@@ -22,7 +22,7 @@ React Fetches is a simple and efficient way to make requests into your REST API'
 
 ## Motivation
 
-I and some friends were tired to use a lot of boilerplate code to do our requests.
+Me and my friends were tired to use a lot of boilerplate code to do our requests.
 
 We used to build our projects with a set of libraries as listed below:
 
