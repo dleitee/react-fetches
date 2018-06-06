@@ -4,8 +4,8 @@
   "description": "A new way to perform fetch requests with react.",
   "main": "./lib/module.js",
   "scripts": {
-    "test": "BABEL_ENV=development jest --config .jestrc.json",
-    "build": "BABEL_ENV=rollup rollup -c",
+    "test": "BABEL_ENV=test jest --config .jestrc.json",
+    "build": "NODE_ENV=rollup rollup -c",
     "eslint": "eslint src tests"
   },
   "repository": {
@@ -31,6 +31,7 @@
     "babel-eslint": "^8.2.3",
     "babel-jest": "^22.4.4",
     "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "dom-testing-library": "^2.3.2",

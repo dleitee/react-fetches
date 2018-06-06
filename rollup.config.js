@@ -9,6 +9,7 @@ export default {
     format: 'cjs',
   },
   plugins: [
+    babel({ exclude: 'node_modules/**' }),
     resolve({
       modulesOnly: true,
       jsnext: true,
@@ -17,7 +18,6 @@ export default {
       },
     }),
     commonjs(),
-    babel({ exclude: 'node_modules/**' }),
   ],
   external: ['fetches', 'lodash.frompairs', 'p-is-promise', 'prop-types', 'react', 'react-dom'],
 }
