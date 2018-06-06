@@ -44,7 +44,7 @@ So I created the `react-fetches`.
 ## Install
 
 ```sh
-npm install --save react-fetches
+npm install --save fetches react-fetches
 ```
 
 ## Basic Example
@@ -53,6 +53,7 @@ npm install --save react-fetches
 ```es6
 import React from 'react'
 import { render } from 'react-dom'
+import { createClient } from 'fetches'
 import { Provider } from 'react-fetches'
 
 import View from './view'
@@ -71,7 +72,7 @@ render(<Root />, document.getElementById('root'))
 **view.js**
 ```es6
 import React, { Component, Fragment } from 'react'
-import { connect } from 'fetches'
+import { connect } from 'react-fetches'
 
 const mapRequestsToProps = (http, map) => ({
   userID: map(http.get('user'), (user) => user.id),
