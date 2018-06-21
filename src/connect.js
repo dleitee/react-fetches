@@ -44,7 +44,7 @@ const connect = (mapRequestsToProps, mapDispatchToProps) => WrappedComponent => 
             errors: responses.errors,
             responses: responses.responses,
           }))
-        })(mapRequestsToProps)
+        })(mapRequestsToProps, this.props)
       }
     }
 
