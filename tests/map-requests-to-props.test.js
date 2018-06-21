@@ -212,4 +212,37 @@ describe('connect with mapRequestsToProps', () => {
     expect(props.prop1).toBe('prop1')
     expect(props.name).toBe('success')
   })
+  test('should return the response using props on request', async () => {
+    nock(EXAMPLE_URI)
+      .get('/token?user=1')
+      .delay(500)
+      .reply(200, () => ({ body: 'success' }))
+    const renderized = jest.fn()
+    const SimpleComponent = props => {
+      renderized(props)
+      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+    }
+
+    SimpleComponent.propTypes = {
+      loading: PropTypes.bool.isRequired,
+    }
+
+    const mapRequestsToProps = (http, parser, currentProps) => ({
+      name: parser(http.get('name'), item => item.body),
+      token: parser(http.get('token', { user: currentProps.userId }), item => item.body),
+    })
+
+    const ConnectedComponent = connect(mapRequestsToProps)(SimpleComponent)
+    const { getByText } = render(
+      <View>
+        <ConnectedComponent userId={1} />
+      </View>
+    )
+    await wait(() => getByText('Loading'))
+    await wait(() => getByText('Loaded'))
+    expect(renderized).toHaveBeenCalledTimes(2)
+    const props = renderized.mock.calls[1][0]
+    expect(props.token).toBe('success')
+    expect(props.name).toBe('success')
+  })
 })
