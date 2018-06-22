@@ -46,7 +46,7 @@
     "lodash.get": "^4.4.2",
     "nock": "^9.2.6",
     "node-fetch": "^2.1.2",
-    "react-testing-library": "^4.0.0",
+    "react-testing-library": "^4.0.1",
     "rollup": "^0.60.0",
     "rollup-plugin-babel": "^3.0.4",
     "rollup-plugin-commonjs": "^9.1.3",
