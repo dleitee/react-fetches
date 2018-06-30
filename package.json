@@ -19,7 +19,7 @@
   "homepage": "https://github.com/dleitee/fetches#readme",
   "author": "Daniel Leite de Oliveira <dleitee@gmail.com> (https://github.com/dleitee)",
   "dependencies": {
-    "fetches": "^0.1.3",
+    "fetches": "^0.2.0",
     "lodash.frompairs": "^4.0.1",
     "p-is-promise": "^1.1.0",
     "prop-types": "^15.6.1",
