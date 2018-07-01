@@ -15,7 +15,7 @@ const client = createClient(EXAMPLE_URI, {
   after: [responseMiddleware],
 })
 
-const View = props => <Provider client={client}>{props.children}</Provider>
+const View = ({ children }) => <Provider client={client}>{children}</Provider>
 
 View.propTypes = {
   children: PropTypes.node.isRequired,
@@ -77,7 +77,6 @@ describe('Request Component: Do a request', () => {
       <View>
         <Request uri="friends">
           {({ loading, data }) => {
-            console.log(loading)
             renderized(loading, data)
             if (loading) {
               return 'Loading'

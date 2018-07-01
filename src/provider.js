@@ -4,10 +4,8 @@ import { Client } from 'fetches'
 
 import { FetchesContext } from './context'
 
-const Provider = props => (
-  <FetchesContext.Provider value={props.client}>
-    {React.Children.only(props.children)}
-  </FetchesContext.Provider>
+const Provider = ({ client, children }) => (
+  <FetchesContext.Provider value={client}>{React.Children.only(children)}</FetchesContext.Provider>
 )
 
 Provider.propTypes = {

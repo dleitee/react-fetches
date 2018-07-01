@@ -19,23 +19,27 @@ const connect = (mapRequestsToProps, mapDispatchToProps) => WrappedComponent => 
         ...this.getDispatchAsProps(),
       }
     }
+
     componentDidMount() {
-      if (!this.props.client) {
+      const { client } = this.props
+      if (!client) {
         return
       }
       this.getResponseAsProps()
     }
 
     getDispatchAsProps() {
+      const { client } = this.props
       if (mapDispatchToProps) {
-        return makeDispatches(this.props.client)(mapDispatchToProps)
+        return makeDispatches(client)(mapDispatchToProps)
       }
       return {}
     }
 
     getResponseAsProps() {
+      const { client } = this.props
       if (mapRequestsToProps) {
-        makeRequests(this.props.client, props => {
+        makeRequests(client, props => {
           const responses = makeResponses(props)
 
           this.setState(() => ({

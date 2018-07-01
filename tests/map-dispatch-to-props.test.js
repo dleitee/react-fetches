@@ -11,7 +11,7 @@ const EXAMPLE_URI = 'http://example.com/api/v1/'
 
 const client = createClient(EXAMPLE_URI)
 
-const View = props => <Provider client={client}>{props.children}</Provider>
+const View = ({ children }) => <Provider client={client}>{children}</Provider>
 
 View.propTypes = {
   children: PropTypes.node.isRequired,
@@ -63,8 +63,8 @@ describe('connect with mapDispatchToProps', () => {
       .get('/name/')
       .delay(500)
       .reply(200, () => ({ body: 'success' }))
-    const props = renderized.mock.calls[0][0]
-    const response = await props.save()
+    const { save } = renderized.mock.calls[0][0]
+    const response = await save()
     expect(response.error).toBeFalsy()
     expect(response.data.body).toBe('success')
   })
@@ -74,8 +74,8 @@ describe('connect with mapDispatchToProps', () => {
       .get('/name?first=a')
       .delay(500)
       .reply(200, () => ({ body: 'success' }))
-    const props = renderized.mock.calls[0][0]
-    const response = await props.save({ first: 'a' })
+    const { save } = renderized.mock.calls[0][0]
+    const response = await save({ first: 'a' })
     expect(response.error).toBeFalsy()
     expect(response.data.body).toBe('success')
   })
@@ -85,8 +85,8 @@ describe('connect with mapDispatchToProps', () => {
       .get('/name?first=a')
       .delay(500)
       .reply(200, () => ({ body: 'success' }))
-    const props = renderized.mock.calls[0][0]
-    const response = await props.save({ first: 'a' }, value => value.body)
+    const { save } = renderized.mock.calls[0][0]
+    const response = await save({ first: 'a' }, value => value.body)
     expect(response.error).toBeFalsy()
     expect(response.data).toBe('success')
   })

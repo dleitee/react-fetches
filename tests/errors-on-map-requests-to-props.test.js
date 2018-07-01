@@ -11,7 +11,7 @@ const EXAMPLE_URI = 'http://example.com/api/v1/'
 
 const client = createClient(EXAMPLE_URI)
 
-const View = props => <Provider client={client}>{props.children}</Provider>
+const View = ({ children }) => <Provider client={client}>{children}</Provider>
 
 View.propTypes = {
   children: PropTypes.node.isRequired,
@@ -32,7 +32,8 @@ describe('connect with mapRequestsToProps and Errors', () => {
     const renderized = jest.fn()
     const SimpleComponent = props => {
       renderized(props)
-      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+      const { loading } = props
+      return <Fragment>{loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     }
 
     SimpleComponent.propTypes = {
@@ -52,9 +53,9 @@ describe('connect with mapRequestsToProps and Errors', () => {
     await wait(() => getByText('Loading'))
     await wait(() => getByText('Loaded'))
     expect(renderized).toHaveBeenCalledTimes(2)
-    const props = renderized.mock.calls[1][0]
-    expect(props.prop1).toBe('prop1')
-    expect(props.errors.name).not.toBeFalsy()
+    const { prop1, errors } = renderized.mock.calls[1][0]
+    expect(prop1).toBe('prop1')
+    expect(errors.name).not.toBeFalsy()
   })
   test('should return errors with the returned error into the named key', async () => {
     nock(EXAMPLE_URI)
@@ -66,7 +67,8 @@ describe('connect with mapRequestsToProps and Errors', () => {
     const renderized = jest.fn()
     const SimpleComponent = props => {
       renderized(props)
-      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+      const { loading } = props
+      return <Fragment>{loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     }
 
     SimpleComponent.propTypes = {
@@ -86,9 +88,9 @@ describe('connect with mapRequestsToProps and Errors', () => {
     await wait(() => getByText('Loading'))
     await wait(() => getByText('Loaded'))
     expect(renderized).toHaveBeenCalledTimes(2)
-    const props = renderized.mock.calls[1][0]
-    expect(props.prop1).toBe('prop1')
-    expect(props.errors.name).not.toBeFalsy()
-    expect(props.errors.name.name).toBe('Name is required')
+    const { prop1, errors } = renderized.mock.calls[1][0]
+    expect(prop1).toBe('prop1')
+    expect(errors.name).not.toBeFalsy()
+    expect(errors.name.name).toBe('Name is required')
   })
 })

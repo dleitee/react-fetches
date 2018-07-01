@@ -5,8 +5,8 @@ import { connect } from '../src/connect'
 
 describe('Connect function', () => {
   test('should return only ConnectedComponent', () => {
-    const SimpleComponent = props => (
-      <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+    const SimpleComponent = ({ loading }) => (
+      <Fragment>{loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     )
 
     SimpleComponent.propTypes = {
