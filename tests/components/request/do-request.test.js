@@ -184,4 +184,34 @@ describe('Request Component: Do a request', () => {
     await wait(() => getByText('Loaded'))
     expect(headerFn.mock.calls[0][0].authorization[0]).toBe('Token c')
   })
+
+  test("The fetch request of Request's component should hit into an URL with parameters.", async () => {
+    const response = {
+      data: [{ name: 'Joaquim', age: 2 }, { name: 'Daniel', age: 28 }],
+    }
+
+    const fn = jest.fn()
+    nock(EXAMPLE_URI)
+      .get('/friends?order=1')
+      .reply(200, () => {
+        fn()
+        return response
+      })
+
+    const { getByText } = render(
+      <View>
+        <Request uri="friends" data={{ order: 1 }}>
+          {({ loading, data }) => {
+            if (loading) {
+              return 'Loading'
+            }
+            return 'Loaded'
+          }}
+        </Request>
+      </View>
+    )
+    await wait(() => getByText('Loading'))
+    await wait(() => getByText('Loaded'))
+    expect(fn).toBeCalled()
+  })
 })

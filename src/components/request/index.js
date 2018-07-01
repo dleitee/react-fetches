@@ -24,6 +24,7 @@ Request.propTypes = {
   multipleMethod: PropTypes.oneOf(['all', 'race']),
   skip: PropTypes.bool,
   config: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 }
 
 Request.defaultProps = {
@@ -32,5 +33,6 @@ Request.defaultProps = {
   multipleMethod: 'all',
   skip: false,
   config: {},
+  data: undefined,
 }
 export default Request
