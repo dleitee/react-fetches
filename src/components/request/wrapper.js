@@ -78,7 +78,7 @@ class RequestWrapper extends React.Component {
 RequestWrapper.propTypes = {
   client: PropTypes.instanceOf(Client).isRequired,
   children: PropTypes.func.isRequired,
-  uri: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf('string')]).isRequired, // eslint-disable-line react/no-unused-prop-types
+  uri: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired, // eslint-disable-line react/no-unused-prop-types
   method: PropTypes.oneOf(['get', 'post', 'patch', 'delete', 'put']).isRequired, // eslint-disable-line react/no-unused-prop-types
   multipleMethod: PropTypes.oneOf(['all', 'race']).isRequired, // eslint-disable-line react/no-unused-prop-types
 }

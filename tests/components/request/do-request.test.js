@@ -128,4 +128,34 @@ describe('Request Component: Do a request', () => {
     expect(renderized.mock.calls[0][1]).toBeNull()
     expect(renderized.mock.calls[1][1]).toEqual([responseFriends, responseChannels])
   })
+  test("The Request's component can be skipped with the prop skip", async () => {
+    const response = {
+      data: [{ name: 'Joaquim', age: 2 }, { name: 'Daniel', age: 29 }],
+    }
+
+    nock(EXAMPLE_URI)
+      .get('/friends/')
+      .reply(200, () => response)
+
+    const renderized = jest.fn().mockReturnValue(null)
+
+    const { getByText } = render(
+      <View>
+        <Request uri="friends" skip>
+          {({ loading, data }) => {
+            renderized(loading, data)
+            if (loading) {
+              return 'Loading'
+            }
+            return 'Loaded'
+          }}
+        </Request>
+      </View>
+    )
+    expect(renderized).toBeCalled()
+    await wait(() => getByText('Loaded'))
+    expect(renderized).toHaveBeenCalledTimes(1)
+    expect(renderized.mock.calls[0][0]).toBeFalsy()
+    expect(renderized.mock.calls[0][1]).toBeNull()
+  })
 })
