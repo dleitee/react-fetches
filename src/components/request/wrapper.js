@@ -14,11 +14,18 @@ class RequestWrapper extends React.Component {
     this.controller = new AbortController()
     this.signal = this.controller.signal
     this.timeout = null
+    this.interval = null
   }
 
   componentDidMount() {
-    const { client, delay } = this.props
+    const { client, delay, poolInterval } = this.props
     const http = getHTTPMethods(client)
+    if (poolInterval) {
+      this.delayRequest().then(() => {
+        this.interval = setInterval(() => this.resolvePromise(http), poolInterval)
+      })
+      return
+    }
     if (delay) {
       this.delayRequest().then(() => this.resolvePromise(http))
       return
@@ -28,9 +35,8 @@ class RequestWrapper extends React.Component {
 
   componentWillUnmount() {
     this.controller.abort()
-    if (this.timeout) {
-      clearTimeout(this.timeout)
-    }
+    clearTimeout(this.timeout)
+    clearInterval(this.interval)
   }
 
   getRequest(http, uri, props) {
@@ -106,6 +112,7 @@ RequestWrapper.propTypes = {
   config: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types,react/no-unused-prop-types
   data: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types,react/no-unused-prop-types
   delay: PropTypes.number.isRequired,
+  poolInterval: PropTypes.number.isRequired,
 }
 
 export default RequestWrapper
