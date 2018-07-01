@@ -18,11 +18,11 @@ class RequestWrapper extends React.Component {
   }
 
   componentDidMount() {
-    const { client, delay, poolInterval } = this.props
+    const { client, delay, pollInterval } = this.props
     const http = getHTTPMethods(client)
-    if (poolInterval) {
+    if (pollInterval) {
       this.delayRequest().then(() => {
-        this.interval = setInterval(() => this.resolvePromise(http), poolInterval)
+        this.interval = setInterval(() => this.resolvePromise(http), pollInterval)
       })
       return
     }
@@ -112,7 +112,7 @@ RequestWrapper.propTypes = {
   config: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types,react/no-unused-prop-types
   data: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types,react/no-unused-prop-types
   delay: PropTypes.number.isRequired,
-  poolInterval: PropTypes.number.isRequired,
+  pollInterval: PropTypes.number.isRequired,
 }
 
 export default RequestWrapper

@@ -260,7 +260,7 @@ describe('Request Component: Do a request', () => {
 
     const { getByText } = render(
       <View>
-        <Request uri="friends" data={{ order: 1 }} poolInterval={500}>
+        <Request uri="friends" data={{ order: 1 }} pollInterval={500}>
           {({ loading }) => {
             if (loading) {
               return 'Loading'

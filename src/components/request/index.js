@@ -26,7 +26,7 @@ Request.propTypes = {
   config: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   delay: PropTypes.number,
-  poolInterval: PropTypes.number,
+  pollInterval: PropTypes.number,
 }
 
 Request.defaultProps = {
@@ -37,6 +37,6 @@ Request.defaultProps = {
   config: {},
   data: {},
   delay: 0,
-  poolInterval: 0,
+  pollInterval: 0,
 }
 export default Request
