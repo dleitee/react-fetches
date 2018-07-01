@@ -13,36 +13,58 @@ class RequestWrapper extends React.Component {
     }
     this.controller = new AbortController()
     this.signal = this.controller.signal
+    this.timeout = null
   }
 
-  async componentDidMount() {
-    const { client } = this.props
+  componentDidMount() {
+    const { client, delay } = this.props
     const http = getHTTPMethods(client)
-    try {
-      const data = await this.handlePromise(http, this.props)
-      this.setState({
-        error: null,
-        data,
-        loading: false,
-      })
-    } catch (error) {
-      if (error.name !== 'AbortError') {
-        this.setState({
-          error,
-          data: null,
-          loading: false,
-        })
-      }
+    if (delay) {
+      this.delayRequest().then(() => this.resolvePromise(http))
+      return
     }
+    this.resolvePromise(http)
   }
 
   componentWillUnmount() {
     this.controller.abort()
+    if (this.timeout) {
+      clearTimeout(this.timeout)
+    }
   }
 
   getRequest(http, uri, props) {
     const { method, data, config } = props
     return http[method.toLowerCase()](uri, data, Object.assign({}, config, { signal: this.signal }))
+  }
+
+  delayRequest() {
+    const { delay } = this.props
+    return new Promise(resolve => {
+      this.timeout = setTimeout(() => {
+        resolve()
+      }, delay)
+    })
+  }
+
+  resolvePromise(http) {
+    this.handlePromise(http, this.props)
+      .then(data => {
+        this.setState({
+          error: null,
+          data,
+          loading: false,
+        })
+      })
+      .catch(error => {
+        if (error.name !== 'AbortError') {
+          this.setState({
+            error,
+            data: null,
+            loading: false,
+          })
+        }
+      })
   }
 
   handlePromise(http, props) {
@@ -83,6 +105,7 @@ RequestWrapper.propTypes = {
   multipleMethod: PropTypes.oneOf(['all', 'race']).isRequired, // eslint-disable-line react/no-unused-prop-types
   config: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types,react/no-unused-prop-types
   data: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types,react/no-unused-prop-types
+  delay: PropTypes.number.isRequired,
 }
 
 export default RequestWrapper

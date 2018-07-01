@@ -25,6 +25,7 @@ Request.propTypes = {
   skip: PropTypes.bool,
   config: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  delay: PropTypes.number,
 }
 
 Request.defaultProps = {
@@ -33,6 +34,7 @@ Request.defaultProps = {
   multipleMethod: 'all',
   skip: false,
   config: {},
-  data: undefined,
+  data: {},
+  delay: 0,
 }
 export default Request

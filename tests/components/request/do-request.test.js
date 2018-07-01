@@ -201,7 +201,37 @@ describe('Request Component: Do a request', () => {
     const { getByText } = render(
       <View>
         <Request uri="friends" data={{ order: 1 }}>
-          {({ loading, data }) => {
+          {({ loading }) => {
+            if (loading) {
+              return 'Loading'
+            }
+            return 'Loaded'
+          }}
+        </Request>
+      </View>
+    )
+    await wait(() => getByText('Loading'))
+    await wait(() => getByText('Loaded'))
+    expect(fn).toBeCalled()
+  })
+
+  test("The Request's component should delay the request.", async () => {
+    const response = {
+      data: [{ name: 'Joaquim', age: 2 }, { name: 'Daniel', age: 28 }],
+    }
+
+    const fn = jest.fn()
+    nock(EXAMPLE_URI)
+      .get('/friends?order=1')
+      .reply(200, () => {
+        fn()
+        return response
+      })
+
+    const { getByText } = render(
+      <View>
+        <Request uri="friends" data={{ order: 1 }} delay={500}>
+          {({ loading }) => {
             if (loading) {
               return 'Loading'
             }
