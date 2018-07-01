@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Client, getHTTPMethods } from 'fetches'
+import AbortController from 'abort-controller'
 
 class RequestWrapper extends React.Component {
   constructor(props) {
@@ -10,25 +11,33 @@ class RequestWrapper extends React.Component {
       error: null,
       data: null,
     }
+    this.controller = new AbortController()
+    this.signal = this.controller.signal
   }
 
   async componentDidMount() {
     const { client, method, uri } = this.props
     const http = getHTTPMethods(client)
     try {
-      const data = await http[method.toLowerCase()](uri)
+      const data = await http[method.toLowerCase()](uri, {}, { signal: this.signal })
       this.setState({
         error: null,
         data,
         loading: false,
       })
     } catch (error) {
-      this.setState({
-        error,
-        data: null,
-        loading: false,
-      })
+      if (error.name !== 'AbortError') {
+        this.setState({
+          error,
+          data: null,
+          loading: false,
+        })
+      }
     }
+  }
+
+  componentWillUnmount() {
+    this.controller.abort()
   }
 
   render() {

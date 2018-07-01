@@ -58,4 +58,37 @@ describe('Request Component: Do a request', () => {
     expect(renderized.mock.calls[0][1]).toBeNull()
     expect(renderized.mock.calls[1][1]).toEqual(response)
   })
+
+  test("The Request's component should cancel the fetch request when its has been unmounted", async () => {
+    // TODO: Implement this test
+    // We already implemented this feature, but we can't test it yet
+    // node-fetch doesn't support the signal for aborting fetch calls
+    // there is an issue created there to fix it
+    // https://github.com/bitinn/node-fetch/issues/95
+    const response = {
+      data: [{ name: 'Joaquim', age: 2 }, { name: 'Daniel', age: 29 }],
+    }
+    nock(EXAMPLE_URI)
+      .get('/friends/')
+      .delay(1000)
+      .reply(200, () => response)
+    const renderized = jest.fn().mockReturnValue(null)
+    const { unmount, getByText } = render(
+      <View>
+        <Request uri="friends">
+          {({ loading, data }) => {
+            console.log(loading)
+            renderized(loading, data)
+            if (loading) {
+              return 'Loading'
+            }
+            return 'Loaded'
+          }}
+        </Request>
+      </View>
+    )
+    expect(renderized).toBeCalled()
+    await wait(() => getByText('Loading'))
+    unmount()
+  })
 })
