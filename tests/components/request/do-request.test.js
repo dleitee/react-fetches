@@ -128,15 +128,8 @@ describe('Request Component: Do a request', () => {
     expect(renderized.mock.calls[0][1]).toBeNull()
     expect(renderized.mock.calls[1][1]).toEqual([responseFriends, responseChannels])
   })
-  test("The Request's component can be skipped with the prop skip", async () => {
-    const response = {
-      data: [{ name: 'Joaquim', age: 2 }, { name: 'Daniel', age: 29 }],
-    }
 
-    nock(EXAMPLE_URI)
-      .get('/friends/')
-      .reply(200, () => response)
-
+  test("The Request's component should be skipped with the prop skip", async () => {
     const renderized = jest.fn().mockReturnValue(null)
 
     const { getByText } = render(
@@ -157,5 +150,38 @@ describe('Request Component: Do a request', () => {
     expect(renderized).toHaveBeenCalledTimes(1)
     expect(renderized.mock.calls[0][0]).toBeFalsy()
     expect(renderized.mock.calls[0][1]).toBeNull()
+  })
+
+  test("The fetch request of Request's component should be configured with the prop config", async () => {
+    const response = {
+      data: [{ name: 'Joaquim', age: 2 }, { name: 'Daniel', age: 28 }],
+    }
+
+    const headerFn = jest.fn()
+    nock(EXAMPLE_URI)
+      .get('/friends/')
+      .reply(200, function reply() {
+        headerFn(this.req.headers)
+        return response
+      })
+
+    const renderized = jest.fn().mockReturnValue(null)
+
+    const { getByText } = render(
+      <View>
+        <Request uri="friends" config={{ headers: { Authorization: 'Token c' } }}>
+          {({ loading, data }) => {
+            renderized(loading, data)
+            if (loading) {
+              return 'Loading'
+            }
+            return 'Loaded'
+          }}
+        </Request>
+      </View>
+    )
+    await wait(() => getByText('Loading'))
+    await wait(() => getByText('Loaded'))
+    expect(headerFn.mock.calls[0][0].authorization[0]).toBe('Token c')
   })
 })

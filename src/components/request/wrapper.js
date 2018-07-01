@@ -42,7 +42,11 @@ class RequestWrapper extends React.Component {
 
   getRequest(http, uri, props) {
     const { method } = props
-    return http[method.toLowerCase()](uri, {}, { signal: this.signal })
+    return http[method.toLowerCase()](
+      uri,
+      {},
+      Object.assign({}, props.config, { signal: this.signal })
+    )
   }
 
   handlePromise(http, props) {
@@ -81,6 +85,7 @@ RequestWrapper.propTypes = {
   uri: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired, // eslint-disable-line react/no-unused-prop-types
   method: PropTypes.oneOf(['get', 'post', 'patch', 'delete', 'put']).isRequired, // eslint-disable-line react/no-unused-prop-types
   multipleMethod: PropTypes.oneOf(['all', 'race']).isRequired, // eslint-disable-line react/no-unused-prop-types
+  config: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types,react/no-unused-prop-types
 }
 
 export default RequestWrapper

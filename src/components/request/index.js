@@ -19,10 +19,11 @@ const Request = props => {
 
 Request.propTypes = {
   children: PropTypes.func.isRequired,
-  uri: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]), // eslint-disable-line react/no-unused-prop-types
-  method: PropTypes.oneOf(['get', 'post', 'patch', 'delete', 'put']), // eslint-disable-line react/no-unused-prop-types
-  multipleMethod: PropTypes.oneOf(['all', 'race']), // eslint-disable-line react/no-unused-prop-types
+  uri: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+  method: PropTypes.oneOf(['get', 'post', 'patch', 'delete', 'put']),
+  multipleMethod: PropTypes.oneOf(['all', 'race']),
   skip: PropTypes.bool,
+  config: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 }
 
 Request.defaultProps = {
@@ -30,5 +31,6 @@ Request.defaultProps = {
   method: 'get',
   multipleMethod: 'all',
   skip: false,
+  config: {},
 }
 export default Request
