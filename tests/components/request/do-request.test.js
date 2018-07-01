@@ -90,4 +90,42 @@ describe('Request Component: Do a request', () => {
     await wait(() => getByText('Loading'))
     unmount()
   })
+
+  test("The Request's component should also receive URI as an array", async () => {
+    const responseFriends = {
+      data: [{ name: 'Joaquim', age: 2 }, { name: 'Daniel', age: 29 }],
+    }
+    const responseChannels = {
+      data: ['random', 'app', 'social'],
+    }
+
+    nock(EXAMPLE_URI)
+      .get('/channels/')
+      .reply(200, () => responseChannels)
+    nock(EXAMPLE_URI)
+      .get('/friends/')
+      .reply(200, () => responseFriends)
+    const renderized = jest.fn().mockReturnValue(null)
+    const { getByText } = render(
+      <View>
+        <Request uri={['friends', 'channels']}>
+          {({ loading, data }) => {
+            renderized(loading, data)
+            if (loading) {
+              return 'Loading'
+            }
+            return 'Loaded'
+          }}
+        </Request>
+      </View>
+    )
+    expect(renderized).toBeCalled()
+    await wait(() => getByText('Loading'))
+    await wait(() => getByText('Loaded'))
+    expect(renderized).toHaveBeenCalledTimes(2)
+    expect(renderized.mock.calls[0][0]).toBeTruthy()
+    expect(renderized.mock.calls[1][0]).toBeFalsy()
+    expect(renderized.mock.calls[0][1]).toBeNull()
+    expect(renderized.mock.calls[1][1]).toEqual([responseFriends, responseChannels])
+  })
 })
