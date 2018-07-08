@@ -9,7 +9,15 @@
     },
     "rollup": {
       "presets": [["env", {"modules": false}], "react"],
-      "plugins": ["transform-object-rest-spread", "external-helpers"]
-    },
+      "plugins": [
+        "transform-object-rest-spread",
+        "external-helpers",
+        "transform-class-properties",
+        ["transform-runtime", {
+          "polyfill": false,
+          "regenerator": true
+        }]
+      ]
+    }
   }
 }
