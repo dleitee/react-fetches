@@ -1,20 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Client, getHTTPMethods } from 'fetches'
-import AbortController from 'abort-controller'
 
 class RequestWrapper extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      loading: true,
-      error: null,
-      data: null,
-    }
-    this.controller = new AbortController()
-    this.signal = this.controller.signal
-    this.timeout = null
-    this.interval = null
+  controller = AbortController ? new AbortController() : {}
+
+  timeout = null
+
+  interval = null
+
+  unmounted = false
+
+  state = {
+    loading: true,
+    error: null,
+    data: null,
   }
 
   componentDidMount() {
@@ -34,17 +34,33 @@ class RequestWrapper extends React.Component {
   }
 
   componentWillUnmount() {
-    this.controller.abort()
+    this.unmounted = true
+    if (this.controller.abort) {
+      this.controller.abort()
+    }
     clearTimeout(this.timeout)
     clearInterval(this.interval)
   }
 
-  getRequest(http, uri, props) {
+  getRequest = (http, uri, props) => {
     const { method, data, config } = props
-    return http[method.toLowerCase()](uri, data, Object.assign({}, config, { signal: this.signal }))
+    const { signal } = this.controller
+
+    return http[method.toLowerCase()](uri, data, Object.assign({}, config, { signal }))
   }
 
-  delayRequest() {
+  getStateResponse = (error, data) => {
+    if (this.unmounted) {
+      return null
+    }
+    return this.setState({
+      error,
+      data,
+      loading: false,
+    })
+  }
+
+  delayRequest = () => {
     const { delay } = this.props
     return new Promise(resolve => {
       this.timeout = setTimeout(() => {
@@ -53,27 +69,17 @@ class RequestWrapper extends React.Component {
     })
   }
 
-  resolvePromise(http) {
+  resolvePromise = http => {
     this.handlePromise(http, this.props)
       .then(data => {
-        this.setState({
-          error: null,
-          data,
-          loading: false,
-        })
+        this.getStateResponse(null, data)
       })
       .catch(error => {
-        if (error.name !== 'AbortError') {
-          this.setState({
-            error,
-            data: null,
-            loading: false,
-          })
-        }
+        this.getStateResponse(error, null)
       })
   }
 
-  handlePromise(http, props) {
+  handlePromise = (http, props) => {
     const { uri } = props
     if (Array.isArray(uri)) {
       return this.handleMultiplePromises(http, props)
@@ -81,12 +87,12 @@ class RequestWrapper extends React.Component {
     return this.handleSinglePromise(http, props)
   }
 
-  async handleSinglePromise(http, props) {
+  handleSinglePromise = (http, props) => {
     const { uri } = props
     return this.getRequest(http, uri, props)
   }
 
-  async handleMultiplePromises(http, props) {
+  handleMultiplePromises = (http, props) => {
     const { multipleMethod, uri } = props
     const promises = uri.map(item => this.getRequest(http, item, props))
     return Promise[multipleMethod](promises)

@@ -19,7 +19,6 @@
   "homepage": "https://github.com/dleitee/fetches#readme",
   "author": "Daniel Leite de Oliveira <dleitee@gmail.com> (https://github.com/dleitee)",
   "dependencies": {
-    "abort-controller": "^1.0.2",
     "lodash.frompairs": "^4.0.1",
     "p-is-promise": "^1.1.0",
     "prop-types": "^15.6.1",
