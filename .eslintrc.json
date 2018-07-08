@@ -32,6 +32,7 @@
         "newlines-between": "always"
       }
     ],
+    "import/no-unresolved": ["error", { "ignore": ["fetches"] }],
     "react/jsx-filename-extension": "off",
     "arrow-parens": ["error", "as-needed"],
     "prettier/prettier": [
