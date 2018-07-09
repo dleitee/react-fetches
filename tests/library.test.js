@@ -1,4 +1,4 @@
-import { Provider, connect } from '../src/'
+import { Provider, connect } from '../src'
 
 describe('Library exports', () => {
   test('should export Provider and connect', () => {

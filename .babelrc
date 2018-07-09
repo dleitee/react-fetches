@@ -5,11 +5,26 @@
   "plugins": ["transform-object-rest-spread"],
   "env": {
     "test": {
-      "presets": ["env", "react"]
+      "presets": ["env", "react"],
+      "plugins": [
+        "transform-class-properties",
+        ["transform-runtime", {
+          "polyfill": false,
+          "regenerator": true
+        }]
+      ]
     },
     "rollup": {
       "presets": [["env", {"modules": false}], "react"],
-      "plugins": ["transform-object-rest-spread", "external-helpers"]
-    },
+      "plugins": [
+        "transform-object-rest-spread",
+        "external-helpers",
+        "transform-class-properties",
+        ["transform-runtime", {
+          "polyfill": false,
+          "regenerator": true
+        }]
+      ]
+    }
   }
 }

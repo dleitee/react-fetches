@@ -9,7 +9,7 @@ export default {
     format: 'cjs',
   },
   plugins: [
-    babel({ exclude: 'node_modules/**' }),
+    babel({ exclude: 'node_modules/**', runtimeHelpers: true }),
     resolve({
       modulesOnly: true,
       jsnext: true,

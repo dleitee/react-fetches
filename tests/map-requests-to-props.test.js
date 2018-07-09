@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { render, wait } from 'react-testing-library'
+import { render, wait, cleanup } from 'react-testing-library'
 import nock from 'nock'
 import { createClient } from 'fetches'
 
@@ -11,7 +11,7 @@ const EXAMPLE_URI = 'http://example.com/api/v1/'
 
 const client = createClient(EXAMPLE_URI)
 
-const View = props => <Provider client={client}>{props.children}</Provider>
+const View = ({ children }) => <Provider client={client}>{children}</Provider>
 
 View.propTypes = {
   children: PropTypes.node.isRequired,
@@ -24,12 +24,13 @@ describe('connect with mapRequestsToProps', () => {
       .delay(500)
       .reply(200, () => ({ body: 'success' }))
   })
+  afterEach(cleanup)
   afterAll(() => {
     nock.cleanAll()
   })
   test('must add a prop called loading with the request status', async () => {
-    const SimpleComponent = props => (
-      <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+    const SimpleComponent = ({ loading }) => (
+      <Fragment>{loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     )
 
     SimpleComponent.propTypes = {
@@ -53,7 +54,8 @@ describe('connect with mapRequestsToProps', () => {
     const renderized = jest.fn()
     const SimpleComponent = props => {
       renderized(props)
-      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+      const { loading } = props
+      return <Fragment>{loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     }
 
     SimpleComponent.propTypes = {
@@ -90,12 +92,12 @@ describe('connect with mapRequestsToProps', () => {
     )
   })
   test('should return the parsed string', async () => {
-    const SimpleComponent = props => {
-      if (!props.loading) {
-        expect(props.name).toBe('success')
+    const SimpleComponent = ({ loading, name }) => {
+      if (!loading) {
+        expect(name).toBe('success')
       }
 
-      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+      return <Fragment>{loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     }
 
     SimpleComponent.propTypes = {
@@ -122,9 +124,9 @@ describe('connect with mapRequestsToProps', () => {
   })
   test('should call the render function only twice', async () => {
     const renderized = jest.fn()
-    const SimpleComponent = props => {
+    const SimpleComponent = ({ loading }) => {
       renderized()
-      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+      return <Fragment>{loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     }
 
     SimpleComponent.propTypes = {
@@ -157,7 +159,8 @@ describe('connect with mapRequestsToProps', () => {
     const renderized = jest.fn()
     const SimpleComponent = props => {
       renderized(props)
-      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+      const { loading } = props
+      return <Fragment>{loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     }
 
     SimpleComponent.propTypes = {
@@ -166,8 +169,8 @@ describe('connect with mapRequestsToProps', () => {
 
     const mapRequestsToProps = (http, parser) => ({
       name: parser(http.get('name'), item => item.body),
-      last_name: parser(http.get('last-name'), item => item.body),
-      first_name: parser(http.get('first-name'), item => item.body),
+      lastName: parser(http.get('last-name'), item => item.body),
+      firstName: parser(http.get('first-name'), item => item.body),
     })
 
     const ConnectedComponent = connect(mapRequestsToProps)(SimpleComponent)
@@ -179,16 +182,17 @@ describe('connect with mapRequestsToProps', () => {
     await wait(() => getByText('Loading'))
     await wait(() => getByText('Loaded'))
     expect(renderized).toHaveBeenCalledTimes(2)
-    const props = renderized.mock.calls[1][0]
-    expect(props.name).toBe('success')
-    expect(props.last_name).toBe('success')
-    expect(props.first_name).toBe('success')
+    const { name, lastName, firstName } = renderized.mock.calls[1][0]
+    expect(name).toBe('success')
+    expect(lastName).toBe('success')
+    expect(firstName).toBe('success')
   })
   test('should maintain the component props', async () => {
     const renderized = jest.fn()
     const SimpleComponent = props => {
       renderized(props)
-      return <Fragment>{props.loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
+      const { loading } = props
+      return <Fragment>{loading ? <span>Loading</span> : <span>Loaded</span>}</Fragment>
     }
 
     SimpleComponent.propTypes = {
@@ -208,8 +212,8 @@ describe('connect with mapRequestsToProps', () => {
     await wait(() => getByText('Loading'))
     await wait(() => getByText('Loaded'))
     expect(renderized).toHaveBeenCalledTimes(2)
-    const props = renderized.mock.calls[1][0]
-    expect(props.prop1).toBe('prop1')
-    expect(props.name).toBe('success')
+    const { prop1, name } = renderized.mock.calls[1][0]
+    expect(prop1).toBe('prop1')
+    expect(name).toBe('success')
   })
 })
