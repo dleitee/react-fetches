@@ -2,6 +2,18 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Client, getHTTPMethods } from 'fetches'
 
+const cacheable = setCache => response => {
+  setCache(response)
+  return Promise.resolve(response)
+}
+
+const getClient = (client, cache, setCache) => {
+  if (!cache) {
+    return client
+  }
+  return client.appendAfterMiddleware(cacheable(setCache))
+}
+
 class RequestWrapper extends React.Component {
   controller = AbortController ? new AbortController() : {}
 
@@ -11,15 +23,24 @@ class RequestWrapper extends React.Component {
 
   unmounted = false
 
+  memoryAddress = null
+
   state = {
     loading: true,
     error: null,
     data: null,
   }
 
+  constructor(props) {
+    super(props)
+    this.memoryAddress = JSON.stringify(props.uri)
+  }
+
   componentDidMount() {
-    const { client, delay, pollInterval } = this.props
-    const http = getHTTPMethods(client)
+    const { client, delay, pollInterval, setCache, cache } = this.props
+    const setCacheWithAddress = setCache.bind(null, this.memoryAddress)
+    const configuredClient = getClient(client, cache, setCacheWithAddress)
+    const http = getHTTPMethods(configuredClient)
     if (pollInterval) {
       this.delayRequest().then(() => {
         this.interval = setInterval(() => this.resolvePromise(http), pollInterval)
@@ -80,7 +101,13 @@ class RequestWrapper extends React.Component {
   }
 
   handlePromise = (http, props) => {
-    const { uri } = props
+    const { uri, cache, getCache } = props
+
+    const cacheResult = getCache(this.memoryAddress)
+    if (cache && cacheResult) {
+      return Promise.resolve(cacheResult)
+    }
+
     if (Array.isArray(uri)) {
       return this.handleMultiplePromises(http, props)
     }
@@ -119,6 +146,7 @@ RequestWrapper.propTypes = {
   data: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types,react/no-unused-prop-types
   delay: PropTypes.number.isRequired,
   pollInterval: PropTypes.number.isRequired,
+  cache: PropTypes.bool.isRequired,
 }
 
 export default RequestWrapper

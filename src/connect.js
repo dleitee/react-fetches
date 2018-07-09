@@ -63,7 +63,7 @@ const connect = (mapRequestsToProps, mapDispatchToProps) => WrappedComponent => 
 
   const FecthesComponent = props => (
     <FetchesContext.Consumer>
-      {client => <Wrapper client={client} {...props} />}
+      {({ client }) => <Wrapper client={client} {...props} />}
     </FetchesContext.Consumer>
   )
   return FecthesComponent

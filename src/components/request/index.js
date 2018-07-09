@@ -6,13 +6,15 @@ import { FetchesContext } from '../../context'
 import RequestWrapper from './wrapper'
 
 const Request = props => {
-  const { skip, children } = props
+  const { skip, children, uri, cache } = props
   if (skip) {
     return children({ data: null, error: null, loading: false })
   }
   return (
     <FetchesContext.Consumer>
-      {client => <RequestWrapper client={client} {...props} />}
+      {({ client, setCache, getCache }) => (
+        <RequestWrapper client={client} getCache={getCache} setCache={setCache} {...props} />
+      )}
     </FetchesContext.Consumer>
   )
 }
@@ -27,6 +29,7 @@ Request.propTypes = {
   data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   delay: PropTypes.number,
   pollInterval: PropTypes.number,
+  cache: PropTypes.bool,
 }
 
 Request.defaultProps = {
@@ -38,5 +41,6 @@ Request.defaultProps = {
   data: {},
   delay: 0,
   pollInterval: 0,
+  cache: false,
 }
 export default Request
