@@ -6,7 +6,8 @@
   "scripts": {
     "test": "BABEL_ENV=test jest --config .jestrc.json",
     "build": "NODE_ENV=rollup rollup -c",
-    "eslint": "eslint src tests"
+    "eslint": "eslint src tests",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
