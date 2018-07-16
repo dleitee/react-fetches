@@ -1,6 +1,6 @@
 {
   "name": "react-fetches",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A new way to perform fetch requests with react.",
   "main": "./lib/module.js",
   "scripts": {
