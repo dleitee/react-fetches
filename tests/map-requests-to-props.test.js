@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { render, wait } from 'react-testing-library'
+import { render, wait, cleanup } from 'react-testing-library'
 import nock from 'nock'
 import { createClient } from 'fetches'
 
@@ -24,6 +24,7 @@ describe('connect with mapRequestsToProps', () => {
       .delay(500)
       .reply(200, () => ({ body: 'success' }))
   })
+  afterEach(cleanup)
   afterAll(() => {
     nock.cleanAll()
   })
