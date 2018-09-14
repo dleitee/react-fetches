@@ -44,7 +44,7 @@
     "form-data": "^2.3.2",
     "jest": "^23.1.0",
     "lodash.get": "^4.4.2",
-    "nock": "^9.2.6",
+    "nock": "^10.0.0",
     "node-fetch": "^2.1.2",
     "react-testing-library": "^5.0.0",
     "rollup": "^0.65.0",
