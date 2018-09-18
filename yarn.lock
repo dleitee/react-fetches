@@ -4269,9 +4269,9 @@ react-dom@^16.4.0:
     object-assign "^4.1.1"
     prop-types "^15.6.0"
 
-react-testing-library@^5.0.0:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-5.0.1.tgz#b7bb205da19333477b6f92631286df98cad398b3"
+react-testing-library@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-5.1.0.tgz#ae208d9e3b7faae233409d205e287b304ec8ffdc"
   dependencies:
     dom-testing-library "^3.1.0"
     wait-for-expect "^1.0.0"
