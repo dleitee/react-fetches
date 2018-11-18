@@ -12,9 +12,9 @@ const asyncFunction = (requests, cb) => {
   Promise.all(keys.map(getPromiseFromKey.bind(null, requests))).then(args => cb(_fromPairs(args)))
 }
 
-const makeRequests = (client, cb) => mapRequestsToProps => {
+const makeRequests = (client, cb) => (mapRequestsToProps, currentProps) => {
   const http = getHTTPMethods(client)
-  const requests = mapRequestsToProps(http, handler)
+  const requests = mapRequestsToProps(http, handler, currentProps)
   asyncFunction(requests, cb)
 }
 

@@ -1,12 +1,13 @@
 {
   "name": "react-fetches",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A new way to perform fetch requests with react.",
   "main": "./lib/module.js",
   "scripts": {
     "test": "BABEL_ENV=test jest --config .jestrc.json",
     "build": "NODE_ENV=rollup rollup -c",
-    "eslint": "eslint src tests"
+    "eslint": "eslint src tests",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
