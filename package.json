@@ -34,7 +34,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
-    "dom-testing-library": "^3.0.0",
+    "dom-testing-library": "^3.19.2",
     "eslint": "^5.0.0",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-config-cheesecakelabs": "^2.0.3",
