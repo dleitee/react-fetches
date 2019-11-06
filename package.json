@@ -41,7 +41,7 @@
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.9.1",
-    "form-data": "^2.3.2",
+    "form-data": "^3.0.0",
     "jest": "^23.1.0",
     "lodash.get": "^4.4.2",
     "nock": "^10.0.0",
