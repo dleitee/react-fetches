@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { render, wait } from 'react-testing-library'
+import { render, wait, cleanup } from 'react-testing-library'
 import nock from 'nock'
 import { createClient } from 'fetches'
 
@@ -21,6 +21,9 @@ describe('connect with mapRequestsToProps and Errors', () => {
   afterAll(() => {
     nock.cleanAll()
   })
+
+  afterEach(cleanup)
+
   test('should return errors with the named key', async () => {
     nock(EXAMPLE_URI)
       .get('/name/')

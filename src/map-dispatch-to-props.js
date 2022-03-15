@@ -7,7 +7,7 @@ const dispatchHandler = (request, config) => (data = {}, parser) => {
   return handler(completeRequest(), parser)('default').then(args => args[1])
 }
 
-const makeDispatches = client => mapDispatchToProps => {
+const makeDispatches = client => (mapDispatchToProps, currentProps) => {
   const http = getHTTPMethods(client)
   const keys = Object.keys(http)
 
@@ -19,7 +19,7 @@ const makeDispatches = client => mapDispatchToProps => {
     {}
   )
 
-  return mapDispatchToProps(httpMethods, dispatchHandler)
+  return mapDispatchToProps(httpMethods, dispatchHandler, currentProps)
 }
 
 export { makeDispatches }

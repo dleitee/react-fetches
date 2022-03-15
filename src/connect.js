@@ -28,7 +28,7 @@ const connect = (mapRequestsToProps, mapDispatchToProps) => WrappedComponent => 
 
     getDispatchAsProps() {
       if (mapDispatchToProps) {
-        return makeDispatches(this.props.client)(mapDispatchToProps)
+        return makeDispatches(this.props.client)(mapDispatchToProps, this.props)
       }
       return {}
     }
@@ -44,7 +44,7 @@ const connect = (mapRequestsToProps, mapDispatchToProps) => WrappedComponent => 
             errors: responses.errors,
             responses: responses.responses,
           }))
-        })(mapRequestsToProps)
+        })(mapRequestsToProps, this.props)
       }
     }
 

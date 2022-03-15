@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { render } from 'react-testing-library'
+import { render, cleanup } from 'react-testing-library'
 import nock from 'nock'
 import { createClient } from 'fetches'
 
@@ -42,6 +42,8 @@ describe('connect with mapDispatchToProps', () => {
   afterAll(() => {
     nock.cleanAll()
   })
+
+  afterEach(cleanup)
 
   test('the render function should be called only one time', () => {
     expect(renderized).toHaveBeenCalledTimes(1)
